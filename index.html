@@ -1,129 +1,74 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tber scales</title>
+  <meta charset="UTF-8" />
+  <title>Tber - メジャースケール</title>
   <style>
-    body {
-      background-color: #1a1a1a;
-      color: white;
-      font-family: 'Arial', sans-serif;
-      text-align: center;
-      padding: 2rem;
-    }
-    select {
-      margin: 0.5rem;
-      padding: 0.5rem;
-      font-size: 1rem;
-    }
-    .image-area, .table-area {
-      margin-top: 2rem;
-      background: #2a2a2a;
-      padding: 1rem;
-      border-radius: 10px;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-    table {
-      margin: 0 auto;
-      border-collapse: collapse;
-      color: white;
-    }
-    th, td {
-      border: 1px solid white;
-      padding: 0.5rem 1rem;
-    }
+    body { font-family: sans-serif; padding: 20px; background: #fff; }
+    .selector-box { margin-bottom: 20px; }
+    #fretboard-container img { max-width: 100%; height: auto; border: 1px solid #ccc; }
   </style>
 </head>
 <body>
-  <h1>Tber scales</h1>
-  <div>
+  <h1>Tber - メジャースケール指板表示</h1>
+
+  <div class="selector-box">
     <select id="key-select">
-      <option>C</option>
-      <option>C#</option>
-      <option>D</option>
-      <option>D#</option>
-      <option>E</option>
-      <option>F</option>
-      <option>F#</option>
-      <option>G</option>
-      <option>G#</option>
-      <option>A</option>
-      <option>A#</option>
-      <option>B</option>
+      <option value="C">C</option>
+      <option value="G">G</option>
+      <option value="D">D</option>
+      <option value="A">A</option>
+      <option value="E">E</option>
+      <option value="B">B</option>
+      <option value="F♯">F♯</option>
+      <option value="C♯">C♯</option>
+      <option value="F">F</option>
+      <option value="B♭">B♭</option>
+      <option value="E♭">E♭</option>
+      <option value="A♭">A♭</option>
     </select>
 
-    <select id="genre-select">
-      <option>メジャー</option>
-      <option>マイナー</option>
-      <option>モード</option>
+    <select id="scale-group-select">
+      <option value="メジャー">メジャー</option>
     </select>
 
     <select id="scale-select">
-      <option>メジャー</option>
-      <option>ペンタ</option>
-      <option>ブルース</option>
+      <option value="メジャー">メジャー</option>
     </select>
   </div>
 
-  <div class="image-area">
-    <h2>指板</h2>
-    <img id="fretboard-img" src="assets/c_メジャー_fretboard.png" alt="fretboard">
-  </div>
-
-  <div class="table-area">
-    <h2>構成音</h2>
-    <table>
-      <thead>
-        <tr><th>音名</th><th>度数</th></tr>
-      </thead>
-      <tbody id="tone-table">
-        <tr><td>C</td><td>1</td></tr>
-        <tr><td>D</td><td>2</td></tr>
-        <tr><td>E</td><td>3</td></tr>
-        <tr><td>F</td><td>4</td></tr>
-        <tr><td>G</td><td>5</td></tr>
-        <tr><td>A</td><td>6</td></tr>
-        <tr><td>B</td><td>7</td></tr>
-      </tbody>
-    </table>
+  <div id="fretboard-container">
+    <img id="fretboard-image" src="assets/C_メジャー_fretboard.png" alt="指板画像">
   </div>
 
   <script>
-    const keySelect = document.getElementById("key-select");
-    const genreSelect = document.getElementById("genre-select");
-    const scaleSelect = document.getElementById("scale-select");
-    const fretboardImg = document.getElementById("fretboard-img");
-
-    genreSelect.addEventListener("change", () => {
-      const genre = genreSelect.value;
-      let scales = [];
-      if (genre === "メジャー") {
-        scales = ["メジャー", "ペンタ", "ブルース"];
-      } else if (genre === "マイナー") {
-        scales = ["ナチュラル", "メロディック", "ハーモニック", "ペンタ", "ブルース"];
-      } else if (genre === "モード") {
-        scales = ["アイオニアン", "ドリアン", "フリジアン", "リディアン", "ミクソリディアン", "エオリアン", "ロクリアン"];
-      }
-      scaleSelect.innerHTML = "";
-      scales.forEach(s => {
-        const opt = document.createElement("option");
-        opt.textContent = s;
-        scaleSelect.appendChild(opt);
-      });
-    });
+    const scaleImageMap = {
+      "C": "C_メジャー_fretboard.png",
+      "G": "G_メジャー_fretboard.png",
+      "D": "D_メジャー_fretboard.png",
+      "A": "A_メジャー_fretboard.png",
+      "E": "E_メジャー_fretboard.png",
+      "B": "B_メジャー_fretboard.png",
+      "F♯": "F♯_メジャー_fretboard.png",
+      "C♯": "C♯_メジャー_fretboard.png",
+      "F": "F_メジャー_fretboard.png",
+      "B♭": "B♭_メジャー_fretboard.png",
+      "E♭": "E♭_メジャー_fretboard.png",
+      "A♭": "A♭_メジャー_fretboard.png"
+    };
 
     function updateImage() {
-      const key = keySelect.value;
-      const scale = scaleSelect.value;
-      fretboardImg.src = `assets/${key.toLowerCase()}_${scale}_fretboard.png`;
+      const key = document.getElementById("key-select").value;
+      const scale = document.getElementById("scale-select").value;
+      if (scale === "メジャー" && scaleImageMap[key]) {
+        const filename = "assets/" + scaleImageMap[key];
+        document.getElementById("fretboard-image").src = filename;
+      }
     }
 
-    keySelect.addEventListener("change", updateImage);
-    scaleSelect.addEventListener("change", updateImage);
+    document.getElementById("key-select").addEventListener("change", updateImage);
+    document.getElementById("scale-select").addEventListener("change", updateImage);
   </script>
 </body>
 </html>
